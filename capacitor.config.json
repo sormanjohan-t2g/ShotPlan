@@ -1,0 +1,8 @@
+{
+  "appId": "com.giralytics.teetogreen",
+  "appName": "TeeToGreen",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "always"
+  }
+}
