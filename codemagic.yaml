@@ -1,0 +1,49 @@
+workflows:
+  ios-workflow:
+    name: TeeToGreen iOS Workflow
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: GIRalytics key   # must match the name you gave the key in step 2
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.giralytics.teetogreen
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+      node: latest
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+    scripts:
+      - name: Install npm dependencies
+        script: npm install
+      - name: Cocoapods installation
+        script: |
+          cd ios/App && pod install
+      - name: Sync web assets into the native project
+        script: npx cap sync ios
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
+      - name: Increment build number
+        script: |
+          cd $CM_BUILD_DIR/ios/App
+          agvtool new-version -all $(($(app-store-connect get-latest-app-store-build-number "$BUNDLE_ID") + 1))
+      - name: Build ipa for distribution
+        script: |
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false   # keep false until you're ready for a real submission
