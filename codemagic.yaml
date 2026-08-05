@@ -6,6 +6,8 @@ workflows:
     integrations:
       app_store_connect: GIRalytics key
     environment:
+      groups:
+        - signing
       vars:
         BUNDLE_ID: "com.golfalytics.shotplan"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
