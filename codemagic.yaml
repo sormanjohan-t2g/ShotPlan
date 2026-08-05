@@ -27,6 +27,9 @@ workflows:
         script: npm install
       - name: Sync web assets into the native project
         script: npx cap sync ios
+      - name: Show actual bundle identifier in Xcode project
+        script: |
+          grep -m1 PRODUCT_BUNDLE_IDENTIFIER ios/App/App.xcodeproj/project.pbxproj
       - name: Set up code signing settings on Xcode project
         script: xcode-project use-profiles
       - name: Increment build number
