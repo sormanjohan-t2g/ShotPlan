@@ -12,7 +12,6 @@ workflows:
         XCODE_SCHEME: "App"
       node: latest
       xcode: latest
-      cocoapods: default
     triggering:
       events:
         - push
@@ -22,9 +21,6 @@ workflows:
     scripts:
       - name: Install npm dependencies
         script: npm install
-      - name: Cocoapods installation
-        script: |
-          cd ios/App && pod install
       - name: Sync web assets into the native project
         script: npx cap sync ios
       - name: Set up keychain to be used for code signing
