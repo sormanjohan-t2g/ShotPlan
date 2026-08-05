@@ -1,15 +1,13 @@
 workflows:
   ios-workflow:
-    name: TeeToGreen iOS Workflow
+    name: ShotPlan iOS Workflow
     max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: GIRalytics key   # must match the name you gave the key in step 2
+      app_store_connect: GIRalytics key
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.golfalytics.shotplan
       vars:
+        BUNDLE_ID: "com.golfalytics.shotplan"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
       node: latest
@@ -29,6 +27,15 @@ workflows:
           cd ios/App && pod install
       - name: Sync web assets into the native project
         script: npx cap sync ios
+      - name: Set up keychain to be used for code signing
+        script: keychain initialize
+      - name: Fetch signing files (creates them if none exist yet)
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+      - name: Set up signing certificate
+        script: keychain add-certificates
       - name: Set up code signing settings on Xcode project
         script: xcode-project use-profiles
       - name: Increment build number
@@ -46,4 +53,4 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        submit_to_app_store: false   # keep false until you're ready for a real submission
+        submit_to_app_store: false
