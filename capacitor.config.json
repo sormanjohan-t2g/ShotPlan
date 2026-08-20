@@ -1,8 +1,8 @@
 {
-  "appId": "com.giralytics.teetogreen",
-  "appName": "TeeToGreen",
+  "appId": "com.golfalytics.shotplan",
+  "appName": "ShotPlan",
   "webDir": "www",
   "ios": {
-    "contentInset": "always"
+    "contentInset": "never"
   }
 }
