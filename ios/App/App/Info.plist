@@ -70,5 +70,7 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>ShotPlan uses your location to track shots and give distances on the course.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>ShotPlan uses your location while you're using the app to show your distance to the green and track your shots on the course.</string>
 </dict>
 </plist>
